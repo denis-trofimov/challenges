@@ -16,7 +16,7 @@ def count_slice(s):
 
 def median_of_count(d):
     median = 0
-    s = 0
+    s = -1
     if d % 2 == 1:
         even = False
         stop = d // 2 
@@ -27,7 +27,7 @@ def median_of_count(d):
     for i in range(MAX_VAL):
         s += count[i]
             
-        if s > stop:
+        if s >= stop:
             if even:
                 median += i
                 if stop == d // 2 - 1:
@@ -43,16 +43,15 @@ def median_of_count(d):
 def activityNotifications(expenditure, d):
     alerts = 0
     start = 0
-    count_slice(expenditure[start: start + d])
-    while start + d + 1 <= len(expenditure):
-        # print(count)
-        threshold = median_of_count(d)
-        # print(expenditure[start + d], threshold)
-        if expenditure[start + d] >= threshold:
+    end = d
+    count_slice(expenditure[start: end])
+    while end < len(expenditure):
+        if expenditure[end] >= median_of_count(d):
             alerts += 1
         count[expenditure[start]] -= 1
-        count[expenditure[start + d]] += 1
+        count[expenditure[end]] += 1
         start += 1
+        end += 1
         
     return alerts
 
