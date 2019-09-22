@@ -6,50 +6,50 @@ import random
 import re
 import sys
 
-MAX_VAL = 200 + 1
-count = [0] * MAX_VAL
 
-def count_slice(s):
+def count_freq(s):
+    MAX_VAL = 200 + 1
     # count occurences
+    count = [0] * MAX_VAL
     for i in s:
         count[i] += 1
+    return count
 
-def median_of_count(d):
-    median = 0
-    s = -1
-    if d % 2 == 1:
-        even = False
-        stop = d // 2 
+def median_freq(freq, n):
+    median = 0.0
+    if not n % 2:
+        stop = n // 2 - 1
     else:
-        even = True
-        stop = d // 2 - 1
-    
-    for i in range(MAX_VAL):
-        s += count[i]
-            
-        if s >= stop:
-            if even:
-                median += i
-                if stop == d // 2 - 1:
-                    stop += 1
-                else:
-                    break                    
-            else:
-                median = 2 * i
+        stop = n // 2
+    s = 0
+    for k, v in enumerate(freq):
+        s += v
+        if s > stop:
+            if n % 2:
+                median = k
                 break
-    return median
+            elif not median:
+                stop += 1
+                if s > stop:
+                    median = k
+                else:
+                    median += k / 2
+            else:
+                median += k / 2
+                break
+    return median    
 
 # Complete the activityNotifications function below.
 def activityNotifications(expenditure, d):
     alerts = 0
     start = 0
     end = d
-    count_slice(expenditure[start: end])
+    freq = count_freq(expenditure[start: end])
     while end < len(expenditure):
-        if expenditure[end] >= median_of_count(d):
+        if expenditure[end] >= 2 * median_freq(freq, d):
             alerts += 1
-        count[expenditure[start]] -= 1
-        count[expenditure[end]] += 1
+        freq[expenditure[start]] -= 1
+        freq[expenditure[end]] += 1
         start += 1
         end += 1
         
