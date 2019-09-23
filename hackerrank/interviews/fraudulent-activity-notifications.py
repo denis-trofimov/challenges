@@ -16,7 +16,7 @@ def count_freq(s):
     return count
 
 def median_freq(freq, n):
-    median = 0.0
+    median = 0
     if not n % 2:
         stop = n // 2 - 1
     else:
@@ -26,27 +26,30 @@ def median_freq(freq, n):
         s += v
         if s > stop:
             if n % 2:
-                median = k
+                median = 2 * k
                 break
             elif not median:
                 stop += 1
                 if s > stop:
-                    median = k
+                    median = 2 * k
+                    break
                 else:
-                    median += k / 2
+                    median += k
             else:
-                median += k / 2
+                median += k
                 break
     return median    
 
 # Complete the activityNotifications function below.
 def activityNotifications(expenditure, d):
+    if len(expenditure) == d:
+        return 0    
     alerts = 0
     start = 0
     end = d
     freq = count_freq(expenditure[start: end])
     while end < len(expenditure):
-        if expenditure[end] >= 2 * median_freq(freq, d):
+        if expenditure[end] >= median_freq(freq, d):
             alerts += 1
         freq[expenditure[start]] -= 1
         freq[expenditure[end]] += 1
@@ -56,28 +59,18 @@ def activityNotifications(expenditure, d):
     return alerts
 
 if __name__ == '__main__':
-    # fptr = open(os.environ['OUTPUT_PATH'], 'w')
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
 
-    # nd = input().split()
+    nd = input().split()
 
-    # n = int(nd[0])
+    n = int(nd[0])
 
-    # d = int(nd[1])
-    d = 3
-    expenditure = list(map(int, '10 20 30 40 50'.rstrip().split()))
+    d = int(nd[1])
+
+    expenditure = list(map(int, input().rstrip().split()))
+
     result = activityNotifications(expenditure, d)
-    assert(result == 1)   
 
-    d = 5
-    expenditure = list(map(int, '2 3 4 2 3 6 8 4 5'.rstrip().split()))
-    result = activityNotifications(expenditure, d)
-    assert(result == 2)
-    
-    d = 4
-    expenditure = list(map(int, '1 2 3 4 4'.rstrip().split()))
-    result = activityNotifications(expenditure, d)
-    assert(result == 0)
+    fptr.write(str(result) + '\n')
 
-    # fptr.write(str(result) + '\n')
-
-    # fptr.close()
+    fptr.close()
