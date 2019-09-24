@@ -7,49 +7,29 @@ import re
 import sys
 from collections import Counter
 
-class FrequencyTable(dict):
-    def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
-        self.counter = Counter()
-
-    def insert(self, value):
-        current = self.get(value)
-        if current:
-            self[value] = current + 1
-            self.counter[current] -= 1
-            self.counter[current + 1] += 1
-        else:
-            self[value] = 1
-            self.counter[1] += 1
-
-    def remove(self, value):
-        current = self.get(value)
-        if current:
-            if current == 1:
-                self.pop(value)
-                self.counter[1] -= 1
-            else:
-                self[value] = current - 1
-                self.counter[current] -= 1
-                self.counter[current - 1] += 1                
-
-    def check_exact_frequency(self, frequency):
-        return '1' if self.counter[frequency] else '0'
 
 # Complete the freqQuery function below.
 def freqQuery(queries):
-    frequency_fable = FrequencyTable()
+    lookup = Counter()
+    frequencies = Counter()
     answers = []
     for query in queries:
         op, value = query
         if op == 1:
-            frequency_fable.insert(value)
+            current = lookup[value]
+            lookup[value] = current + 1
+            frequencies[current] -= 1
+            frequencies[current + 1] += 1
         elif op == 2:
-            frequency_fable.remove(value)
+            current = lookup[value]
+            if current > 0:
+                lookup[value] = current - 1
+                frequencies[current] -= 1
+                frequencies[current - 1] += 1
         else:
-            answers.append(frequency_fable.check_exact_frequency(value))
+            answers.append(1 if frequencies[value] > 0 else 0)
     return answers
-    
+
 
 if __name__ == '__main__':
     fptr = open(os.environ['OUTPUT_PATH'], 'w')
