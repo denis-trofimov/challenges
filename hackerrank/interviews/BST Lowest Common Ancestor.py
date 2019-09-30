@@ -45,37 +45,17 @@ class Node:
 
        // this is a node of the tree , which contains info as data, left , right
 '''
-from collections import deque
-
-
 
 def lca(root, v1, v2):
-
-    def find_path(start, key):
-        path = deque()
-        node = start
-        while node is not None:
-            path.append(node)
-            if node.info == key:
-                break
-            elif node.info < key:
-                node = node.left
-            else:
-                node = node.right
-        return path
-
-    path_v1 = find_path(root, v1)
-    path_v2 = find_path(root, v2)
-    # print(path_v1, path_v2)
-    lca = None
-    while path_v1 and path_v2:
-        node1 = path_v1.popleft()
-        node2 = path_v2.popleft()
-        if node1.info == node2.info:
-            lca = node1
+    node = root
+    while node:
+        if node.info < v1 and node.info < v2:
+            node = node.right
+        elif node.info > v1 and node.info > v2:
+            node = node.left
         else:
             break
-    return lca
+    return node
 
 
 
