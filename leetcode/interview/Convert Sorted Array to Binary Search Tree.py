@@ -6,7 +6,11 @@ class TreeNode(object):
         self.right = None
 
     def __repr__(self):
-        return str(self.val)
+        return str(self)
+
+    def __str__(self):
+        return str(self.val) + ',' + str(self.left) + ',' +  str(self.right)        
+
 
 class Solution(object):
     def sortedArrayToBST(self, nums):
@@ -14,23 +18,21 @@ class Solution(object):
         :type nums: List[int]
         :rtype: TreeNode
         """
-        def middle_node(nums):
-            n = len(nums)
-            if not n:
+        def middle_node(l, r):
+            if l > r:
                 return
-            elif n == 1:
-                return TreeNode(nums.pop())
-            node = TreeNode(nums[n // 2])
-            node.left = middle_node(nums[:n // 2])
-            node.right = middle_node(nums[n // 2 + 1:])
+            mid = (l + r) // 2
+            node = TreeNode(nums[mid])
+            node.left = middle_node(l, mid - 1)
+            node.right = middle_node(mid + 1, r)
             return node
         
-        return middle_node(nums)
-            
-
-sol = Solution()
-case_input = [-10,-3,0,5,9]
-answer = sol.sortedArrayToBST(case_input)
-print(answer)
-expected = [0,-3,9,-10, None,5]
-# assert expected == answer
+        return middle_node(0, len(nums) - 1)
+        
+if __name__ == "__main__":
+    sol = Solution()
+    case_input = [-10,-3,0,5,9]
+    answer = sol.sortedArrayToBST(case_input)
+    print(answer)
+    expected = [0,-3,9,-10, None,5]
+    # assert expected == answer
