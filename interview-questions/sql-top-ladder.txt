@@ -1,0 +1,14 @@
+Есть след. данные без NULL id.
+create table member (id serial primary key, fio text, is_girl bool);
+create table results (id integer, result integer, result_at timestamp);
+
+Запрос на входе: is_girl=?    N=?
+fio участника занявшего N-ное место
+
+CREATE materialized view result_girl 
+INSERT INTO result_girl FROM 
+
+SELECT COUNT(*), member.id, member.fio,  member.is_girl , max_res.result
+FROM   member, INNER JOIN (SELECT id,  MAX(result)  FROM results  GROUP BY) max_res  
+ON member.id = max_res.id 
+ORDER BY max_res.result DESC
